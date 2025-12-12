@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denys Illichov - Portfolio CV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-primary: #faf8f5;
+            --bg-secondary: #f5f3ef;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-muted: #8a8a8a;
+            --accent-warm: #d4794f;
+            --accent-cool: #6b9b7a;
+            --accent-neutral: #8b7355;
+            --border-color: rgba(139, 115, 85, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 60px;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .hero-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 3px solid var(--accent-neutral);
+            box-shadow: 0 20px 60px rgba(139, 115, 85, 0.2);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-photo:hover {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .hero-text .meta {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 12px 24px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-btn:hover {
+            border-color: var(--accent-warm);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 121, 79, 0.15);
+        }
+
+        .hero-tagline {
+            margin-top: 32px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* Section Styling */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 48px;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-warm), transparent);
+        }
+
+        /* Experience Blocks */
+        .experience-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .exp-block {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exp-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-warm), var(--accent-cool));
+            transform: scaleY(0);
+            transition: transform 0.4s ease;
+        }
+
+        .exp-block:hover {
+            transform: translateX(8px);
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.12);
+            border-color: var(--accent-neutral);
+        }
+
+        .exp-block:hover::before {
+            transform: scaleY(1);
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .exp-header-left h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .exp-role {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .exp-period {
+            padding: 6px 16px;
+            background: linear-gradient(135deg, var(--accent-warm), var(--accent-cool));
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .exp-items {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .exp-items li {
+            padding: 8px 0 8px 24px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .exp-items li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-warm);
+            font-weight: bold;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .project-block {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-block::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 121, 79, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-block:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(139, 115, 85, 0.15);
+        }
+
+        .project-block:hover::after {
+            opacity: 1;
+        }
+
+        .project-block h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .project-block p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Skills Grid */
+        .skills-container {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 48px;
+        }
+
+        .skill-category {
+            margin-bottom: 40px;
+        }
+
+        .skill-category:last-child {
+            margin-bottom: 0;
+        }
+
+        .skill-category h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill-tag {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(212, 121, 79, 0.1), rgba(107, 155, 122, 0.1));
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-warm);
+            background: linear-gradient(135deg, rgba(212, 121, 79, 0.15), rgba(107, 155, 122, 0.15));
+            box-shadow: 0 4px 12px rgba(212, 121, 79, 0.15);
+        }
+
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .achievement-block {
+            background: linear-gradient(135deg, rgba(212, 121, 79, 0.05), rgba(107, 155, 122, 0.05));
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .achievement-block:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 40px rgba(139, 115, 85, 0.12);
+        }
+
+        .achievement-block h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .achievement-block p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Export Button */
+        .export-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent-warm), var(--accent-cool));
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(212, 121, 79, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(212, 121, 79, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .hero-photo {
+                margin: 0 auto;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .exp-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-container {
+                padding: 32px;
+            }
+        }
+
+        @media print {
+            body {
+                background: #faf8f5;
+            }
+            
+            .export-btn {
+                display: none;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .exp-block, .project-block, .achievement-block {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+            
+            .hero-photo {
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cv-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <img src="userpic.png" alt="Denys Illichov" class="hero-photo">
+                    <div class="hero-text">
+                        <h1>Denys Illichov</h1>
+                        <div class="subtitle">Full-Stack & AI Product Builder</div>
+                        <div class="meta">34 y.o · 📍 USA</div>
+                        <div class="hero-links">
+                            <a href="https://www.linkedin.com/in/bigdill/" target="_blank" class="link-btn">LinkedIn ↗</a>
+                            <a href="https://github.com/DanMarteens" target="_blank" class="link-btn">GitHub ↗</a>
+                        </div>
+                        <div class="hero-tagline">
+                            Founder-engineer with 10+ years of experience building and scaling AI-powered consumer and B2B products from zero to revenue. Strong bias toward execution, MVP delivery, and monetization.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">💼 Experience</h2>
+                <div class="experience-grid">
+                    <div class="exp-block fade-in">
+                        <div class="exp-header">
+                            <div class="exp-header-left">
+                                <h3>Freelance / Private collaborations / Pet projects</h3>
+                                <div class="exp-role">Full-Stack & AI Developer</div>
+                            </div>
+                            <span class="exp-period">2024 – 2025</span>
+                        </div>
+                        <ul class="exp-items">
+                            <li>Delivered production-ready web and AI solutions for international clients</li>
+                            <li>Built MVPs, dashboards, and third-party integrations with a focus on speed and measurable outcomes</li>
+                            <li>Owned end-to-end delivery: product thinking, frontend, backend, deployment</li>
+                            <li><strong>Onlist:</strong> AI-powered inventory & resale platform (consumer app)</li>
+                            <li><strong>Notarot:</strong> Experimental AI product in the lifestyle / creative space</li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-block fade-in">
+                        <div class="exp-header">
+                            <div class="exp-header-left">
+                                <h3>Solaya App</h3>
+                                <div class="exp-role">Founder & Builder</div>
+                            </div>
+                            <span class="exp-period">2022 – 2024</span>
+                        </div>
+                        <ul class="exp-items">
+                            <li>Founded and built a lifestyle AI application from scratch</li>
+                            <li>Scaled the product to $8,000 MRR, sustained over multiple years</li>
+                            <li>Owned the full product lifecycle: UX, frontend, backend, AI logic, and monetization</li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-block fade-in">
+                        <div class="exp-header">
+                            <div class="exp-header-left">
+                                <h3>Bitcoins UA</h3>
+                                <div class="exp-role">Full-Stack Developer</div>
+                            </div>
+                            <span class="exp-period">2017 – 2022</span>
+                        </div>
+                        <ul class="exp-items">
+                            <li>Built the MVP mining software platform and operational dashboards for data-center environments</li>
+                            <li>Contributed to the product securing $150K pre-seed investment</li>
+                            <li>Enabled real-time analytics, monitoring, and operational visibility for mining infrastructure</li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-block fade-in">
+                        <div class="exp-header">
+                            <div class="exp-header-left">
+                                <h3>Codesign</h3>
+                                <div class="exp-role">Full-Stack Web Developer</div>
+                            </div>
+                            <span class="exp-period">2015 – 2017</span>
+                        </div>
+                        <ul class="exp-items">
+                            <li>Built and maintained production web applications for client projects</li>
+                            <li>Delivered features across frontend and backend in close collaboration with designers and stakeholders</li>
+                        </ul>
+                    </div>
+
+                    <div class="exp-block fade-in">
+                        <div class="exp-header">
+                            <div class="exp-header-left">
+                                <h3>Gulfstream</h3>
+                                <div class="exp-role">Developer</div>
+                            </div>
+                            <span class="exp-period">2012 – 2015</span>
+                        </div>
+                        <ul class="exp-items">
+                            <li>Worked on digital tools and web systems supporting international real-estate operations</li>
+                            <li>Gained early exposure to business workflows, cross-border clients, and product requirements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🚀 Selected Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-block fade-in">
+                        <h3>wowdoge.xyz</h3>
+                        <p>Crypto-based prediction game with decentralized mechanics</p>
+                    </div>
+                    <div class="project-block fade-in">
+                        <h3>Onlist</h3>
+                        <p>AI-powered inventory & resale platform (consumer app)</p>
+                    </div>
+                    <div class="project-block fade-in">
+                        <h3>Notarot</h3>
+                        <p>Experimental AI product in the lifestyle / creative space</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Achievements Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">🏆 Achievements & Awards</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-block fade-in">
+                        <h4>Google DevFest Orlando</h4>
+                        <p>1st Place Winner (Solo Developer)</p>
+                    </div>
+                    <div class="achievement-block fade-in">
+                        <h4>Startup Weekend Orlando</h4>
+                        <p>1st Place Winner (Team Project)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">⚡ Skills</h2>
+                <div class="skills-container fade-in">
+                    <div class="skill-category">
+                        <h4>Core Technical</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Full-Stack Web Development</span>
+                            <span class="skill-tag">JavaScript / TypeScript</span>
+                            <span class="skill-tag">React / React Native (Expo)</span>
+                            <span class="skill-tag">Node.js / Express</span>
+                            <span class="skill-tag">REST API Design</span>
+                            <span class="skill-tag">PostgreSQL / SQL</span>
+                            <span class="skill-tag">Cloud Infrastructure (AWS / GCP)</span>
+                            <span class="skill-tag">Docker & Deployment</span>
+                            <span class="skill-tag">AI & LLM Integration</span>
+                            <span class="skill-tag">Computer Vision</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Product & Execution</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">MVP Development</span>
+                            <span class="skill-tag">System Architecture</span>
+                            <span class="skill-tag">Monetization & Pricing</span>
+                            <span class="skill-tag">Analytics & Metrics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <button class="export-btn" onclick="exportToPDF()">📄 Save as PDF</button>
+
+    <script>
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all blocks
+        document.querySelectorAll('.exp-block, .project-block, .achievement-block, .skills-container').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Convert image to base64 to avoid security issues
+        function imageToBase64(img) {
+            return new Promise((resolve) => {
+                if (img.src.startsWith('data:')) {
+                    resolve(img.src);
+                    return;
+                }
+                
+                // If it's a local file, try using fetch/FileReader approach
+                if (img.src.startsWith('file://') || img.src.startsWith('blob:')) {
+                    // For local files, create canvas and draw directly
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.naturalWidth || img.width;
+                    canvas.height = img.naturalHeight || img.height;
+                    try {
+                        ctx.drawImage(img, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    } catch (e) {
+                        console.warn('Direct conversion failed, trying fetch:', e);
+                        // Try fetching the image file
+                        fetch(img.src)
+                            .then(response => response.blob())
+                            .then(blob => {
+                                const reader = new FileReader();
+                                reader.onloadend = () => resolve(reader.result);
+                                reader.onerror = () => resolve(null);
+                                reader.readAsDataURL(blob);
+                            })
+                            .catch(() => resolve(null));
+                    }
+                    return;
+                }
+                
+                // For regular images, use standard approach
+                const newImg = new Image();
+                newImg.crossOrigin = 'anonymous';
+                
+                newImg.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = this.naturalWidth || this.width;
+                    canvas.height = this.naturalHeight || this.height;
+                    try {
+                        ctx.drawImage(this, 0, 0);
+                        resolve(canvas.toDataURL('image/png'));
+                    } catch (e) {
+                        console.error('Error converting image:', e);
+                        resolve(null);
+                    }
+                };
+                
+                newImg.onerror = () => resolve(null);
+                newImg.src = img.src;
+            });
+        }
+
+        // Export to PDF using html-to-pdf-js
+        async function exportToPDF() {
+            const btn = document.querySelector('.export-btn');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Generating PDF...';
+            btn.disabled = true;
+
+            try {
+                // Reset all animations and make everything visible
+                const animatedElements = document.querySelectorAll('.exp-block, .project-block, .achievement-block, .skills-container');
+                animatedElements.forEach((el) => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                    el.style.transition = 'none';
+                });
+
+                // Convert image to base64 FIRST to avoid CORS/security issues
+                const image = document.querySelector('.hero-photo');
+                let imageBase64 = null;
+                
+                if (image && image.complete && image.naturalWidth > 0) {
+                    try {
+                        imageBase64 = await imageToBase64(image);
+                        if (imageBase64 && !imageBase64.includes('null')) {
+                            // Update the image source to base64 BEFORE html2canvas runs
+                            image.src = imageBase64;
+                            // Wait for image to be ready with new src
+                            await new Promise(resolve => {
+                                const checkImg = () => {
+                                    if (image.complete && image.src === imageBase64) {
+                                        setTimeout(resolve, 200);
+                                    } else {
+                                        setTimeout(checkImg, 50);
+                                    }
+                                };
+                                checkImg();
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('Image conversion failed, continuing anyway:', e);
+                    }
+                }
+
+                // Wait a moment for everything to render
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                const element = document.getElementById('cv-content');
+                
+                const opt = {
+                    margin: [15, 15, 15, 15],
+                    filename: 'Denys-Illichov-CV.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: false,
+                        allowTaint: false, // Must be false to prevent tainted canvas
+                        backgroundColor: '#faf8f5',
+                        logging: false,
+                        onclone: (clonedDoc, element) => {
+                            // CRITICAL: Replace image in cloned document with base64 version
+                            const clonedImg = clonedDoc.querySelector('.hero-photo');
+                            if (clonedImg && imageBase64) {
+                                clonedImg.src = imageBase64;
+                                clonedImg.removeAttribute('crossorigin');
+                            }
+                        }
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait'
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                await html2pdf().set(opt).from(element).save();
+                
+                btn.textContent = originalText;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('PDF export error:', error);
+                btn.textContent = originalText;
+                btn.disabled = false;
+                alert('PDF export failed: ' + (error.message || error) + '\n\nPlease check the console for more details.');
+            }
+        }
+    </script>
+</body>
+</html>

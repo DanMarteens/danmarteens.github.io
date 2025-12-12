@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Denys Illichov - Portfolio CV</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -368,30 +367,6 @@
             font-size: 0.95rem;
         }
 
-        /* Export Button */
-        .export-btn {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            padding: 14px 28px;
-            background: linear-gradient(135deg, var(--accent-warm), var(--accent-cool));
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 24px rgba(212, 121, 79, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .export-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(212, 121, 79, 0.4);
-        }
-
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -406,6 +381,33 @@
 
         .fade-in {
             animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Contact Button */
+        .contact-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            padding: 14px 28px;
+            background: var(--accent-warm);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(212, 121, 79, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(212, 121, 79, 0.4);
+            background: #c06a3f;
         }
 
         /* Responsive */
@@ -447,7 +449,7 @@
                 background: #faf8f5;
             }
             
-            .export-btn {
+            .contact-btn {
                 display: none;
             }
             
@@ -645,8 +647,6 @@
         </section>
     </div>
 
-    <button class="export-btn" onclick="exportToPDF()">📄 Save as PDF</button>
-
     <script>
         // Intersection Observer for animations
         const observerOptions = {
@@ -671,149 +671,8 @@
             observer.observe(el);
         });
 
-        // Convert image to base64 to avoid security issues
-        function imageToBase64(img) {
-            return new Promise((resolve) => {
-                if (img.src.startsWith('data:')) {
-                    resolve(img.src);
-                    return;
-                }
-                
-                // If it's a local file, try using fetch/FileReader approach
-                if (img.src.startsWith('file://') || img.src.startsWith('blob:')) {
-                    // For local files, create canvas and draw directly
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = img.naturalWidth || img.width;
-                    canvas.height = img.naturalHeight || img.height;
-                    try {
-                        ctx.drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL('image/png'));
-                    } catch (e) {
-                        console.warn('Direct conversion failed, trying fetch:', e);
-                        // Try fetching the image file
-                        fetch(img.src)
-                            .then(response => response.blob())
-                            .then(blob => {
-                                const reader = new FileReader();
-                                reader.onloadend = () => resolve(reader.result);
-                                reader.onerror = () => resolve(null);
-                                reader.readAsDataURL(blob);
-                            })
-                            .catch(() => resolve(null));
-                    }
-                    return;
-                }
-                
-                // For regular images, use standard approach
-                const newImg = new Image();
-                newImg.crossOrigin = 'anonymous';
-                
-                newImg.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = this.naturalWidth || this.width;
-                    canvas.height = this.naturalHeight || this.height;
-                    try {
-                        ctx.drawImage(this, 0, 0);
-                        resolve(canvas.toDataURL('image/png'));
-                    } catch (e) {
-                        console.error('Error converting image:', e);
-                        resolve(null);
-                    }
-                };
-                
-                newImg.onerror = () => resolve(null);
-                newImg.src = img.src;
-            });
-        }
-
-        // Export to PDF using html-to-pdf-js
-        async function exportToPDF() {
-            const btn = document.querySelector('.export-btn');
-            const originalText = btn.textContent;
-            btn.textContent = '⏳ Generating PDF...';
-            btn.disabled = true;
-
-            try {
-                // Reset all animations and make everything visible
-                const animatedElements = document.querySelectorAll('.exp-block, .project-block, .achievement-block, .skills-container');
-                animatedElements.forEach((el) => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'none';
-                    el.style.transition = 'none';
-                });
-
-                // Convert image to base64 FIRST to avoid CORS/security issues
-                const image = document.querySelector('.hero-photo');
-                let imageBase64 = null;
-                
-                if (image && image.complete && image.naturalWidth > 0) {
-                    try {
-                        imageBase64 = await imageToBase64(image);
-                        if (imageBase64 && !imageBase64.includes('null')) {
-                            // Update the image source to base64 BEFORE html2canvas runs
-                            image.src = imageBase64;
-                            // Wait for image to be ready with new src
-                            await new Promise(resolve => {
-                                const checkImg = () => {
-                                    if (image.complete && image.src === imageBase64) {
-                                        setTimeout(resolve, 200);
-                                    } else {
-                                        setTimeout(checkImg, 50);
-                                    }
-                                };
-                                checkImg();
-                            });
-                        }
-                    } catch (e) {
-                        console.warn('Image conversion failed, continuing anyway:', e);
-                    }
-                }
-
-                // Wait a moment for everything to render
-                await new Promise(resolve => setTimeout(resolve, 300));
-
-                const element = document.getElementById('cv-content');
-                
-                const opt = {
-                    margin: [15, 15, 15, 15],
-                    filename: 'Denys-Illichov-CV.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { 
-                        scale: 2,
-                        useCORS: false,
-                        allowTaint: false, // Must be false to prevent tainted canvas
-                        backgroundColor: '#faf8f5',
-                        logging: false,
-                        onclone: (clonedDoc, element) => {
-                            // CRITICAL: Replace image in cloned document with base64 version
-                            const clonedImg = clonedDoc.querySelector('.hero-photo');
-                            if (clonedImg && imageBase64) {
-                                clonedImg.src = imageBase64;
-                                clonedImg.removeAttribute('crossorigin');
-                            }
-                        }
-                    },
-                    jsPDF: { 
-                        unit: 'mm', 
-                        format: 'a4', 
-                        orientation: 'portrait'
-                    },
-                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-                };
-
-                await html2pdf().set(opt).from(element).save();
-                
-                btn.textContent = originalText;
-                btn.disabled = false;
-            } catch (error) {
-                console.error('PDF export error:', error);
-                btn.textContent = originalText;
-                btn.disabled = false;
-                alert('PDF export failed: ' + (error.message || error) + '\n\nPlease check the console for more details.');
-            }
-        }
     </script>
+
+    <a href="mailto:danmarteens@gmail.com" class="contact-btn">✉️ Contact Me</a>
 </body>
 </html>
